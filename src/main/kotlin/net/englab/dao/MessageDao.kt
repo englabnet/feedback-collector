@@ -10,6 +10,7 @@ class MessageDao {
     suspend fun allMessages(): List<Message> = dbQuery {
         MessageTable
             .selectAll()
+            .orderBy(MessageTable.timestamp, SortOrder.DESC)
             .map(::resultRowToMessage)
     }
 
