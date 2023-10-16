@@ -1,5 +1,7 @@
 package net.englab.dao
 
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.config.*
 import kotlinx.coroutines.Dispatchers
 import net.englab.models.MessageTable
@@ -20,12 +22,23 @@ object DatabaseFactory {
         val url = config.property(URL_PROPERTY).getString()
         val username = config.property(USERNAME_PROPERTY).getString()
         val password = config.property(PASSWORD_PROPERTY).getString()
-        val database = Database.connect(url, driverClassName, username, password)
+        val database = Database.connect(createHikariDataSource(url, driverClassName, username, password))
         transaction(database) {
             SchemaUtils.create(MessageTable)
         }
     }
 
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
+    private fun createHikariDataSource(url: String, driverClassName: String, username: String, password: String) =
+        HikariDataSource(HikariConfig().apply {
+            this.jdbcUrl = url
+            this.driverClassName = driverClassName
+            this.username = username
+            this.password = password
+            maximumPoolSize = 3
+            isAutoCommit = false
+            transactionIsolation = "TRANSACTION_REPEATABLE_READ"
+            validate()
+        })
+
+    suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction(Dispatchers.IO) { block() }
 }

@@ -2,6 +2,7 @@ val ktor_version: String by project
 val kotlin_version: String by project
 val exposed_version: String by project
 val postgresql_version: String by project
+val hikaricp_version: String by project
 val logback_version: String by project
 val datetime_version: String by project
 
@@ -35,6 +36,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposed_version")
     implementation("org.postgresql:postgresql:$postgresql_version")
+    implementation("com.zaxxer:HikariCP:$hikaricp_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
