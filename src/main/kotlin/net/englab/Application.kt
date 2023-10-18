@@ -8,7 +8,9 @@ import net.englab.plugins.*
 fun main(args: Array<String>) = EngineMain.main(args)
 
 fun Application.module() {
-    DatabaseFactory.init(environment.config)
+    val config = environment.config;
+    DatabaseFactory.init(config)
     configureSerialization()
+    configureCors(config)
     configureRouting()
 }
