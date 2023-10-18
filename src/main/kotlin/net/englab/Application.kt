@@ -11,6 +11,5 @@ fun Application.module() {
     val config = environment.config;
     DatabaseFactory.init(config)
     configureSerialization()
-    configureCors(config)
     configureRouting()
 }
