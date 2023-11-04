@@ -12,7 +12,9 @@ import net.englab.models.dto.MessageDto
 fun Route.feedbackRouting() {
     route("/feedback") {
         get {
-            call.respond(dao.allMessages())
+            val page = call.parameters["page"]?.toIntOrNull() ?: 0
+            val size = call.parameters["size"]?.toIntOrNull() ?: 10
+            call.respond(dao.allMessages(page, size))
         }
         post<MessageDto> {
             dao.addMessage(Message(
